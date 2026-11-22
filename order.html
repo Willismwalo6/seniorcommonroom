@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Order Online — COMMON ROOM, Egerton University</title>
+<meta name="description" content="Order Common Room meals online and send your order by WhatsApp — pickup or hostel delivery at Egerton University.">
+<meta name="theme-color" content="#2B1B15">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23D5BE9D'/%3E%3Ctext x='32' y='42' font-size='28' font-weight='800' text-anchor='middle' fill='%232B1B15' font-family='Arial'%3ECR%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<noscript><style>.pt{display:none}.rv,.fade,.show,.media img{opacity:1;transform:none}.ln>span{transform:none}</style></noscript>
+</head>
+<body data-page="order.html">
+<header class="page-hero"><div class="blob b1"></div><div class="blob b2"></div><div class="wrap">
+<p class="eyebrow fade" style="--i:0">Order online</p><h1><span class="ln"><span style="--i:0">BUILD YOUR ORDER.</span></span></h1><p class="lead fade" style="--i:2">Add meals, check your total, fill in your details and send it on WhatsApp. Common Room confirms it with you.</p></div></header>
+<main id="main"><section class="sec tight"><div class="wrap order-grid">
+ <div class="order-menu">
+  <div class="toolbar"><div class="tb">
+   <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input id="q" type="search" placeholder="Search meals…" aria-label="Search meals" autocomplete="off"><button class="x" type="button" aria-label="Clear search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+   <div class="chips" id="chips"></div></div></div>
+  <div id="orderList"></div>
+  <p class="note" style="margin-top:1rem">Meals marked Ugali/Rice: choose your side before tapping Add.</p>
+ </div>
+ <aside class="order-side" id="checkout" aria-label="Your order and checkout">
+  <div class="card"><h2 class="h3">1. Your order</h2><div data-lines="plain"></div>
+   <div class="sum" style="margin-top:1rem"><span>Subtotal</span><strong data-subtotal>KSh 0</strong></div>
+   <p class="note" style="margin-top:.6rem">Delivery fee (if any) is confirmed by Common Room on WhatsApp. Continue shopping any time — your cart is saved.</p></div>
+  <form class="card" id="orderForm" novalidate>
+   <h2 class="h3">2. Your details</h2>
+   <div class="field"><label for="f-name">Your name</label><input id="f-name" name="name" autocomplete="name" placeholder="e.g. Wanjiru"><span class="err"></span></div>
+   <div class="field"><label for="f-phone">Phone number</label><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0712 345 678"><span class="err"></span></div>
+   <p class="lbl" style="margin-bottom:.5rem">How would you like your order?</p>
+   <div class="seg" role="radiogroup" aria-label="Delivery or pickup"><label><input type="radio" name="mode" value="delivery" checked><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="16" r="3.500"/><circle cx="18" cy="16" r="3.500"/><path d="M6 16l4-7h5l3 7M10 9L8.500 6H6M13 9l-2 7"/></svg>Delivery</span></label><label><input type="radio" name="mode" value="pickup"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>Pickup</span></label></div>
+   <div class="reveal-box"><div>
+    <div class="field"><label for="f-hostel">Hostel name</label><input id="f-hostel" name="hostel" placeholder="Your hostel"><span class="err"></span></div>
+    <div class="two"><div class="field"><label for="f-block">Building / block <small>(optional)</small></label><input id="f-block" name="block" placeholder="e.g. Block B"></div>
+    <div class="field"><label for="f-room">Room number</label><input id="f-room" name="room" placeholder="e.g. 12"><span class="err"></span></div></div></div></div>
+   <div class="field"><label for="f-notes">Additional instructions <small>(optional)</small></label><textarea id="f-notes" name="notes" placeholder="e.g. Call when you arrive. No pepper please."></textarea></div>
+   <button class="btn btn-primary wide" type="submit" data-checkout><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.900 7L4 20l1.600-4A8 8 0 1 1 20 11.500z"/><path d="M9 8.500c0 3.500 3 6.500 6.500 6.500l1-1.600-2-1-1 .8a4.500 4.500 0 0 1-2-2l.8-1-1-2L9 8.500z"/></svg>Send order on WhatsApp</button>
+   <p class="note" style="margin-top:.8rem">WhatsApp opens with your order ready to send. Common Room will reply to confirm your order and delivery arrangements.</p>
+  </form>
+ </aside>
+</div></section></main>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
