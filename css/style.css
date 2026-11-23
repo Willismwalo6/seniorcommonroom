@@ -400,3 +400,29 @@ input:focus,textarea:focus,select:focus{outline:0;border-color:var(--c7);backgro
 .food .media,.orow .th{aspect-ratio:4/3}.orow .th{aspect-ratio:1}
 
 .stars .rate{margin-left:.4rem;font:800 .9rem var(--fh);color:var(--c7);align-self:center}
+
+/* ===== mobile: transparent nav strip (no hamburger) + 2-column food cards ===== */
+.nav{display:flex}.burger{display:none}
+@media(max-width:1119px){
+.hdr{padding:.7rem 0 .2rem}.hdr .wrap{flex-wrap:wrap;row-gap:.2rem}
+.nav{order:3;width:100%;gap:1.3rem;overflow-x:auto;white-space:nowrap;scrollbar-width:none;padding:.1rem 0 .3rem;-webkit-overflow-scrolling:touch}
+.nav::-webkit-scrollbar{display:none}.nav a{font-size:.74rem;padding:.55rem 0}
+.hero{padding-top:8.5rem}.page-hero{padding-top:9.5rem}
+}
+@media(max-width:559px){
+.grid-food{grid-template-columns:repeat(2,1fr);gap:.65rem}
+.food{border-radius:16px}.food .body{padding:.7rem .65rem .75rem;gap:.4rem}
+.food h3{font-size:.92rem}
+.food p{font-size:.78rem;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:0}
+.food .tag{display:none}.food .price{font-size:.78rem;padding:.22rem .55rem;top:.45rem;right:.45rem}
+.food .buy{flex-direction:column;align-items:stretch;gap:.35rem}
+.food .qty{justify-content:space-between}.food .qty button{width:36px;height:38px}
+.food .tot{display:flex;justify-content:space-between;align-items:baseline}.food .tot small{display:inline}.food .tot b{font-size:1rem}
+.food .acts{grid-template-columns:1fr;gap:.4rem}.food .acts .btn{min-height:42px;font-size:.74rem}
+.food .opts button{min-height:32px;padding:.2rem .7rem;font-size:.75rem}
+}
+
+.food .media,.orow .th{cursor:zoom-in}
+.fv .stage{aspect-ratio:4/3;max-height:62vh}.fv figure{max-width:min(94vw,760px)}
+.fv-act{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;padding-top:.9rem}.fv-act .btn{flex:1 1 140px}
+.lb .x,.lb .pv,.lb .nx{z-index:3}

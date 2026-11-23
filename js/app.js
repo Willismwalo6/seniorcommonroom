@@ -78,13 +78,8 @@ function layout() {
     <nav class="nav" aria-label="Main">${links()}</nav>
     <div class="hdr-actions">
       <button class="icon-btn cart-btn" data-cart aria-label="Open cart">${svg('cart')}<b class="badge" data-count>0</b></button>
-      <button class="icon-btn burger" data-burger aria-label="Open menu" aria-expanded="false">${svg('menu')}</button>
     </div></div></header>
-  <div class="mnav" id="mnav" aria-hidden="true">
-    <div class="mnav-top"><a class="logo" href="index.html"><i>CR</i><span>COMMON ROOM</span></a><button class="icon-btn" data-nav-close aria-label="Close menu">${svg('close')}</button></div>
-    <ul>${NAV.map(([h, t], i) => `<li><a href="${h}" style="--i:${i}" class="${h === PAGE ? 'on' : ''}">${t}</a></li>`).join('')}</ul>
-    <div class="mnav-foot"><a class="btn btn-primary" href="order.html">Order now ${svg('arrow', 'arr')}</a><p class="note">Open daily ${C.hoursLabel}</p></div>
-  </div>`);
+  `);
   document.body.insertAdjacentHTML('beforeend', `
   <div class="scrim" data-close></div>
   <aside class="drawer" id="drawer" role="dialog" aria-label="Your cart" aria-hidden="true">
@@ -118,8 +113,6 @@ function layout() {
 const lock = on => document.body.classList.toggle('lock', on);
 const openDrawer = () => { document.body.classList.add('drawer-open'); $('#drawer').setAttribute('aria-hidden', 'false'); lock(true); };
 const closeDrawer = () => { document.body.classList.remove('drawer-open'); $('#drawer').setAttribute('aria-hidden', 'true'); lock(false); };
-const openNav = () => { $('#mnav').classList.add('open'); $('#mnav').setAttribute('aria-hidden', 'false'); $('[data-burger]').setAttribute('aria-expanded', 'true'); lock(true); };
-const closeNav = () => { $('#mnav').classList.remove('open'); $('#mnav').setAttribute('aria-hidden', 'true'); $('[data-burger]').setAttribute('aria-expanded', 'false'); lock(false); };
 function modal(html) {
   closeModal(true);
   const m = document.createElement('div'); m.className = 'modal';
@@ -189,12 +182,41 @@ function addFrom(btn, buy) {
   refreshAdd(card); setTimeout(() => { btn.classList.remove('done'); btn.innerHTML = h0; }, 1100);
 }
 
+/* ---------- meal photo viewer ---------- */
+let fv, fvIds = [], fvI = 0;
+function showFv(n, quick) {
+  fvI = (n + fvIds.length) % fvIds.length; const it = CR.byId[fvIds[fvI]], st = $('.stage', fv);
+  const set = () => { st.classList.remove('noimg'); st.dataset.label = it.name; st.innerHTML = `<img onload="this.closest('.media').classList.add('loaded')" src="${it.img}" data-fb="${it.fb}" alt="${esc(it.name)}">`; $('figcaption b', fv).textContent = it.name; $('figcaption span', fv).textContent = money(it.price);
+    $('.fv-act', fv).innerHTML = `${it.opts ? optsHtml(it) : ''}<button class="btn btn-primary" data-fv-add>Add to cart</button><button class="btn btn-ghost" data-fv-buy>Order now</button>`; st.classList.remove('swap'); };
+  if (quick) set(); else { st.classList.add('swap'); setTimeout(set, 200); }
+}
+function closeViewer() { if (fv) { fv.classList.remove('open'); lock(false); } }
+function viewer(card) {
+  fvIds = $$('[data-item]').map(c => $('[data-add]', c)).filter(Boolean).map(b => b.dataset.add);
+  fvI = Math.max(0, fvIds.indexOf($('[data-add]', card).dataset.add));
+  if (!fv) {
+    document.body.insertAdjacentHTML('beforeend', `<div class="lb fv" role="dialog" aria-modal="true" aria-label="Meal photo"><button class="icon-btn x" aria-label="Close">${svg('close')}</button><button class="icon-btn pv" aria-label="Previous meal">${svg('left')}</button><button class="icon-btn nx" aria-label="Next meal">${svg('right')}</button><figure><div class="stage media"></div><figcaption><b></b><span></span></figcaption><div class="fv-act"></div></figure></div>`);
+    fv = $('.lb.fv'); $('.x', fv).onclick = closeViewer; $('.pv', fv).onclick = () => showFv(fvI - 1); $('.nx', fv).onclick = () => showFv(fvI + 1);
+    fv.addEventListener('click', e => {
+      if (e.target === fv) return closeViewer();
+      const add = e.target.closest('[data-fv-add]'), buy = e.target.closest('[data-fv-buy]'); if (!add && !buy) return;
+      const it = CR.byId[fvIds[fvI]], o = $('.opts [aria-pressed=true]', fv); Cart.add(it.id, o ? o.dataset.opt : '', 1);
+      if (add) { toast(`<b>${esc(it.name)}</b>${o ? ' (' + o.dataset.opt + ')' : ''} added`); return; }
+      closeViewer(); if ($('#checkout')) $('#checkout').scrollIntoView({ behavior: 'smooth' }); else leave('order.html#checkout');
+    });
+    let x0 = null; fv.addEventListener('pointerdown', e => x0 = e.clientX); fv.addEventListener('pointerup', e => { if (x0 != null && Math.abs(e.clientX - x0) > 50) showFv(fvI + (e.clientX < x0 ? 1 : -1)); x0 = null; });
+    document.addEventListener('keydown', e => { if (!fv.classList.contains('open')) return; if (e.key === 'Escape') closeViewer(); if (e.key === 'ArrowLeft') showFv(fvI - 1); if (e.key === 'ArrowRight') showFv(fvI + 1); });
+  }
+  showFv(fvI, true); fv.classList.add('open'); lock(true); $('.x', fv).focus();
+}
+
 /* ---------- global events ---------- */
-function leave(url) { closeDrawer(); closeNav(); document.body.classList.add('leaving'); setTimeout(() => { location.href = url; }, 480); }
+function leave(url) { closeDrawer(); document.body.classList.add('leaving'); setTimeout(() => { location.href = url; }, 480); }
 function events() {
   document.addEventListener('click', e => {
     const t = e.target;
     let el;
+    if ((el = t.closest('.food .media, .orow .th'))) { viewer(el.closest('[data-item]')); return; }
     if ((el = t.closest('[data-q]'))) { const o = $('output', el.parentElement), n = Math.max(1, Math.min(20, +o.textContent + +el.dataset.q)); o.textContent = n; refreshAdd(el.closest('[data-item]')); return; }
     if ((el = t.closest('.opts button'))) { $$('button', el.parentElement).forEach(b => b.setAttribute('aria-pressed', b === el)); return; }
     if ((el = t.closest('[data-buy]'))) { addFrom(el, true); return; }
@@ -203,8 +225,6 @@ function events() {
     if ((el = t.closest('[data-del]'))) { Cart.del(el.dataset.del); return; }
     if (t.closest('[data-cart]')) { openDrawer(); return; }
     if (t.closest('[data-close]')) { closeDrawer(); return; }
-    if (t.closest('[data-burger]')) { openNav(); return; }
-    if (t.closest('[data-nav-close]')) { closeNav(); return; }
     if ((el = t.closest('[data-modal]'))) { modal(MODALS[el.dataset.modal]); return; }
     if (t.closest('[data-mclose]') || t.classList.contains('modal')) { closeModal(); return; }
     const a = t.closest('a[href]');
@@ -218,7 +238,7 @@ function events() {
       e.preventDefault(); leave(u.href);
     }
   });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDrawer(); closeNav(); closeModal(); } });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDrawer(); closeModal(); closeViewer(); } });
   window.addEventListener('pageshow', e => { if (e.persisted) document.body.classList.remove('leaving'); });
   const fab = $('.fab'); const sc = () => fab.classList.toggle('show', scrollY > 380 || Cart.count() > 0 && scrollY > 120); sc(); addEventListener('scroll', sc, { passive: true });
   $$('img').forEach(i => { if (i.complete && !i.naturalWidth) imgFail(i); else if (i.complete) i.closest('.media')?.classList.add('loaded'); });
